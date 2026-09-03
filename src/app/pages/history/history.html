@@ -1,0 +1,31 @@
+<header class="history__header">
+  <p class="history__eyebrow">Журнал операций</p>
+  <h1 class="history__title">История покупок</h1>
+  <p class="history__description">Просматривайте завершённые покупки и суммы операций.</p>
+</header>
+
+<section class="history__summary">
+  <span class="history__summary-icon"><tui-icon icon="@tui.receipt-text" /></span>
+  <div class="history__summary-item"><small class="history__summary-label">Операций за всё время</small><strong class="history__summary-value">{{ purchases().length }}</strong></div>
+  <div class="history__summary-item history__summary-item--total"><small class="history__summary-label">Общая сумма</small><strong class="history__summary-value">{{ total() | currency:'RUB':'symbol-narrow':'1.2-2':'ru' }}</strong></div>
+</section>
+
+<section class="history__table-card">
+  <div class="history__table-heading"><h2 class="history__table-title">Последние операции</h2><p class="history__table-caption">Все зарегистрированные покупки</p></div>
+  <div class="history__table-wrap">
+    <table class="history__table" tuiTable size="l">
+      <thead><tr><th tuiTh>ID</th><th tuiTh>Название товара</th><th tuiTh>Логин покупателя</th><th tuiTh>Сумма покупки</th><th tuiTh>Дата операции</th></tr></thead>
+      <tbody tuiTbody>
+        @for (purchase of purchases(); track purchase.id) {
+          <tr>
+            <td tuiTd><span class="history__id">#{{ purchase.id }}</span></td>
+            <td tuiTd><div class="history__product"><span class="history__product-icon"><tui-icon icon="@tui.shopping-bag" /></span><strong class="history__product-name">{{ purchase.productName }}</strong></div></td>
+            <td tuiTd><div class="history__user"><span class="history__user-avatar">T</span>{{ purchase.username }}</div></td>
+            <td tuiTd class="history__amount">{{ purchase.amount | currency:'RUB':'symbol-narrow':'1.2-2':'ru' }}</td>
+            <td tuiTd><div class="history__date"><strong class="history__date-day">{{ purchase.date | date:'dd MMM yyyy':'':'ru' }}</strong><small class="history__date-time">{{ purchase.date | date:'HH:mm':'':'ru' }}</small></div></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

@@ -1,0 +1,34 @@
+<div class="app-layout">
+  <aside class="app-layout__sidebar">
+    <a class="app-layout__brand" routerLink="/dashboard" aria-label="На главную">
+      <span class="app-layout__brand-mark">Д</span>
+      <span>Дашборд</span>
+    </a>
+
+    <nav class="app-layout__nav" aria-label="Основная навигация">
+      <a class="app-layout__nav-link" routerLink="/dashboard" routerLinkActive="app-layout__nav-link--active">
+        <tui-icon icon="@tui.package" />
+        <span>Каталог товаров</span>
+      </a>
+      <a class="app-layout__nav-link" routerLink="/history" routerLinkActive="app-layout__nav-link--active">
+        <tui-icon icon="@tui.clock-3" />
+        <span>История покупок</span>
+      </a>
+    </nav>
+
+    <div class="app-layout__profile">
+      <span tuiAvatar="T" size="s" class="app-layout__avatar"></span>
+      <span class="app-layout__profile-copy">
+        <strong class="app-layout__profile-name">{{ auth.username() }}</strong>
+        <small class="app-layout__profile-role">Администратор</small>
+      </span>
+      <button class="app-layout__logout" tuiIconButton appearance="flat" size="s" type="button" title="Выйти" (click)="logout()">
+        <tui-icon icon="@tui.log-out" />
+      </button>
+    </div>
+  </aside>
+
+  <main class="app-layout__content">
+    <router-outlet />
+  </main>
+</div>

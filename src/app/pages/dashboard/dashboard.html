@@ -1,0 +1,71 @@
+<header class="catalog__header">
+  <div>
+    <p class="catalog__eyebrow">Управление ассортиментом</p>
+    <h1 class="catalog__title">Каталог товаров</h1>
+    <p class="catalog__description">Добавляйте товары, обновляйте цены и управляйте ставками НДС.</p>
+  </div>
+  <button class="catalog__add" tuiButton type="button" (click)="openCreate()"><tui-icon icon="@tui.plus" />Добавить товар</button>
+</header>
+
+<section class="catalog__stats" aria-label="Сводка по каталогу">
+  <article class="catalog__stat">
+    <span class="catalog__stat-icon catalog__stat-icon--purple"><tui-icon icon="@tui.package" /></span>
+    <div class="catalog__stat-copy"><small class="catalog__stat-label">Всего товаров</small><strong class="catalog__stat-value">{{ products().length }}</strong><p class="catalog__stat-caption">позиций в каталоге</p></div>
+  </article>
+  <article class="catalog__stat">
+    <span class="catalog__stat-icon catalog__stat-icon--blue"><tui-icon icon="@tui.wallet-cards" /></span>
+    <div class="catalog__stat-copy"><small class="catalog__stat-label">Стоимость каталога</small><strong class="catalog__stat-value">{{ totalValue() | currency:'RUB':'symbol-narrow':'1.0-0':'ru' }}</strong><p class="catalog__stat-caption">без учёта НДС</p></div>
+  </article>
+  <article class="catalog__stat">
+    <span class="catalog__stat-icon catalog__stat-icon--green"><tui-icon icon="@tui.chart-no-axes-column" /></span>
+    <div class="catalog__stat-copy"><small class="catalog__stat-label">Средняя цена</small><strong class="catalog__stat-value">{{ averagePrice() | currency:'RUB':'symbol-narrow':'1.0-0':'ru' }}</strong><p class="catalog__stat-caption">за одну позицию</p></div>
+  </article>
+</section>
+
+<section class="catalog__table-card">
+  <div class="catalog__table-heading"><h2 class="catalog__table-title">Все товары</h2><p class="catalog__table-caption">{{ products().length }} позиций</p></div>
+  <div class="catalog__table-wrap">
+    <table class="catalog__table" tuiTable size="l">
+      <thead><tr><th tuiTh>ID</th><th tuiTh>Название</th><th tuiTh>Цена без НДС</th><th tuiTh>НДС</th><th tuiTh class="catalog__actions-heading">Действия</th></tr></thead>
+      <tbody tuiTbody>
+        @for (product of products(); track product.id) {
+          <tr>
+            <td tuiTd><span class="catalog__id">#{{ product.id }}</span></td>
+            <td tuiTd><div class="catalog__product"><span class="catalog__product-icon"><tui-icon icon="@tui.box" /></span><strong class="catalog__product-name">{{ product.name }}</strong></div></td>
+            <td tuiTd class="catalog__price">{{ product.price | currency:'RUB':'symbol-narrow':'1.2-2':'ru' }}</td>
+            <td tuiTd><span class="catalog__vat" tuiBadge appearance="accent" size="s">{{ product.vat | number:'1.0-2':'ru' }}%</span></td>
+            <td tuiTd class="catalog__actions">
+              <button tuiIconButton appearance="flat" size="s" type="button" title="Редактировать" (click)="openEdit(product)"><tui-icon icon="@tui.pencil" /></button>
+              <button class="catalog__delete" tuiIconButton appearance="flat" size="s" type="button" title="Удалить" (click)="askDelete(product)"><tui-icon icon="@tui.trash-2" /></button>
+            </td>
+          </tr>
+        } @empty {
+          <tr><td tuiTd class="catalog__empty" colspan="5"><tui-icon icon="@tui.package-open" /><strong>Каталог пока пуст</strong><span>Добавьте первый товар</span></td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<ng-template [tuiDialogOptions]="{label: editingProduct ? 'Редактировать товар' : 'Новый товар', size: 's'}" [(tuiDialog)]="productDialogOpen">
+  <form class="product-dialog" [formGroup]="productForm" (ngSubmit)="saveProduct()">
+    <p class="product-dialog__description">Укажите основные данные товара. Цена вводится без учёта НДС.</p>
+    <tui-textfield><label tuiLabel for="product-name">Название</label><input id="product-name" tuiInput formControlName="name" placeholder="Например, Ноутбук Pro" /></tui-textfield>
+    @if (productForm.controls.name.touched && productForm.controls.name.invalid) { <p class="product-dialog__error">Введите название товара</p> }
+    <div class="product-dialog__grid">
+      <div class="product-dialog__field"><tui-textfield><label tuiLabel for="product-price">Цена, ₽</label><input id="product-price" tuiInputNumber formControlName="price" [min]="0.01" /></tui-textfield>
+        @if (productForm.controls.price.touched && productForm.controls.price.invalid) { <p class="product-dialog__error">Укажите цену больше нуля</p> }</div>
+      <div class="product-dialog__field"><tui-textfield><label tuiLabel for="product-vat">НДС, %</label><input id="product-vat" tuiInputNumber formControlName="vat" [min]="0" [max]="100" /></tui-textfield>
+        @if (productForm.controls.vat.touched && productForm.controls.vat.invalid) { <p class="product-dialog__error">От 0 до 100</p> }</div>
+    </div>
+    <footer class="product-dialog__actions"><button tuiButton appearance="secondary" type="button" (click)="productDialogOpen = false">Отмена</button><button tuiButton type="submit">{{ editingProduct ? 'Сохранить' : 'Добавить' }}</button></footer>
+  </form>
+</ng-template>
+
+<ng-template [tuiDialogOptions]="{label: 'Удалить товар?', size: 's'}" [(tuiDialog)]="confirmDialogOpen">
+  <div class="confirm-dialog">
+    <span class="confirm-dialog__warning"><tui-icon icon="@tui.triangle-alert" /></span>
+    <p class="confirm-dialog__description">«{{ pendingDelete?.name }}» будет удалён из каталога. Отменить это действие нельзя.</p>
+    <footer class="confirm-dialog__actions"><button tuiButton appearance="secondary" type="button" (click)="confirmDialogOpen = false">Отмена</button><button tuiButton appearance="negative" type="button" (click)="confirmDelete()">Удалить</button></footer>
+  </div>
+</ng-template>

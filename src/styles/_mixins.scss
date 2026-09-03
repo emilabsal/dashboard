@@ -1,0 +1,124 @@
+@mixin page-container {
+  display: block;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+@mixin page-header {
+  margin-bottom: 30px;
+}
+
+@mixin page-eyebrow {
+  margin: 0 0 8px;
+  color: var(--tui-text-action);
+  font: var(--tui-typography-ui-2xs);
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+@mixin page-title {
+  margin: 0;
+  color: var(--tui-text-primary);
+  font: var(--tui-typography-heading-h3);
+  letter-spacing: -.035em;
+}
+
+@mixin page-description {
+  margin: 10px 0 0;
+  color: var(--tui-text-secondary);
+  font: var(--tui-typography-body-m);
+}
+
+@mixin table-card {
+  overflow: hidden;
+  border: 1px solid var(--tui-border-normal);
+  border-radius: 15px;
+  background: var(--tui-background-elevation-1);
+  box-shadow: var(--tui-shadow-small);
+
+  [tuiTh],
+  [tuiTd] {
+    border-inline: none;
+  }
+
+  [tuiTh] {
+    border-block-start: none;
+  }
+}
+
+@mixin table-heading {
+  padding: 22px 24px 18px;
+  border-bottom: 1px solid var(--tui-border-normal);
+}
+
+@mixin table-title {
+  margin: 0;
+  font: var(--tui-typography-heading-h6);
+}
+
+@mixin table-caption {
+  margin: 5px 0 0;
+  color: var(--tui-text-tertiary);
+  font: var(--tui-typography-body-xs);
+}
+
+@mixin table-wrap {
+  overflow-x: auto;
+}
+
+@mixin data-table($min-width, $row-height) {
+  width: 100%;
+  min-width: $min-width;
+  border-collapse: collapse;
+
+  th {
+    color: var(--tui-text-secondary);
+    background: var(--tui-background-neutral-1);
+    font: var(--tui-typography-ui-2xs);
+    font-weight: 700;
+    letter-spacing: .055em;
+    text-align: left;
+    text-transform: uppercase;
+  }
+
+  td {
+    height: $row-height;
+    color: var(--tui-text-secondary);
+    font: var(--tui-typography-body-m);
+  }
+
+  tbody tr {
+    transition: background var(--tui-duration);
+  }
+
+  tbody tr:hover {
+    background: var(--tui-background-neutral-1);
+  }
+}
+
+@mixin record-id {
+  color: var(--tui-text-tertiary);
+}
+
+@mixin product-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+@mixin product-icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  color: var(--tui-text-action);
+  background: var(--tui-background-neutral-1);
+}
+
+@mixin product-name {
+  color: var(--tui-text-primary);
+  font: var(--tui-typography-body-m);
+  font-weight: 700;
+}

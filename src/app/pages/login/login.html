@@ -1,0 +1,48 @@
+<main class="login">
+  <section class="login__intro" aria-label="Описание сервиса">
+    <a class="login__brand" href="/login"><span class="login__brand-mark">Д</span> Дашборд</a>
+    <div class="login__intro-copy">
+      <p class="login__eyebrow">Рабочее пространство</p>
+      <h1 class="login__title">Товары и покупки<br />в одном месте</h1>
+      <p class="login__description">Управляйте каталогом, отслеживайте операции и держите важные данные под рукой.</p>
+    </div>
+    <p class="login__local-note">Все данные хранятся локально на вашем устройстве</p>
+  </section>
+
+  <section class="login__form-side">
+    <form class="login__card" [formGroup]="form" (ngSubmit)="submit()">
+      <header class="login__header">
+        <p class="login__welcome">Добро пожаловать</p>
+        <h2 class="login__form-title">Войдите в аккаунт</h2>
+        <span class="login__form-description">Используйте тестовые данные для входа</span>
+      </header>
+
+      <tui-textfield>
+        <label tuiLabel for="login-username">Логин</label>
+        <input id="login-username" tuiInput formControlName="username" autocomplete="username" placeholder="Введите логин" />
+      </tui-textfield>
+      @if (form.controls.username.touched && form.controls.username.hasError('required')) {
+        <p class="login__error">Введите логин</p>
+      }
+
+      <tui-textfield class="login__password-field">
+        <label tuiLabel for="login-password">Пароль</label>
+        <input id="login-password" tuiInput formControlName="password" autocomplete="current-password" placeholder="Введите пароль" type="password" />
+        <tui-icon tuiPassword />
+      </tui-textfield>
+      @if (form.controls.password.touched && form.controls.password.invalid) {
+        <p class="login__error">
+          @if (form.controls.password.hasError('required')) { Введите пароль }
+          @else if (form.controls.password.hasError('minlength')) { Минимум 8 символов }
+          @else { Только латинские буквы и цифры }
+        </p>
+      }
+
+      <button class="login__submit" tuiButton size="l" type="submit">Войти</button>
+
+      <div class="login__demo-hint">
+        <span>Тестовый доступ</span><code>test</code><span class="login__dot">•</span><code>Test1234</code>
+      </div>
+    </form>
+  </section>
+</main>
